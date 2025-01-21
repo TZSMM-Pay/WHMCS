@@ -20,7 +20,7 @@ Simplify payment management for your WHMCS installation with the TZSMM PAY Gatew
 
 1. **Download the Module**: Clone this repository or download the ZIP file.
    ```bash
-   git clone https://github.com/your-username/tzsmmpay-whmcs-gateway.git
+   git clone https://github.com/TZSMM-Pay/WHMCS.git
    ```
 2. **Upload to WHMCS**: Extract the files and upload the `tzsmmpay` folder to your WHMCS installation's `/modules/gateways/` directory.
 3. **Activate the Module**:
@@ -95,4 +95,4 @@ Thanks for choosing **TZSMM PAY Gateway** to enhance your WHMCS payment experien
 - **Contribution**: Provides instructions for contributing to the project.
 - **License**: States the licensing details.
 
-Replace placeholders like `https://github.com/your-username/tzsmmpay-whmcs-gateway.git` with the actual repository URL. Let me know if you'd like further customization!
+
