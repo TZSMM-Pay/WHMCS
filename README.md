@@ -1,6 +1,3 @@
-Here’s a well-structured and informative `README.md` for your WHMCS payment gateway module:
-
-
 # TZSMM PAY Gateway for WHMCS
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)  
