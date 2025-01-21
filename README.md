@@ -1,12 +1,12 @@
 Here’s a well-structured and informative `README.md` for your WHMCS payment gateway module:
 
-```markdown
+
 # TZSMM PAY Gateway for WHMCS
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)  
 Simplify payment management for your WHMCS installation with the TZSMM PAY Gateway. This module offers secure, fast, and efficient payment processing for your customers.
 
----
+
 
 ## 🚀 Features
 - **Quick and Easy Integration**: Seamlessly integrates with WHMCS.
@@ -14,7 +14,7 @@ Simplify payment management for your WHMCS installation with the TZSMM PAY Gatew
 - **Customizable Checkout**: Adaptable to suit your business needs.
 - **Supports WHMCS 8+**: Fully compatible with the latest versions of WHMCS.
 
----
+
 
 ## 📦 Installation
 
@@ -31,7 +31,6 @@ Simplify payment management for your WHMCS installation with the TZSMM PAY Gatew
    - Enter your API Key and any other necessary details.
    - Save the settings.
 
----
 
 ## ⚙️ Configuration
 
@@ -42,7 +41,7 @@ In the WHMCS Admin Panel:
    - **API Key**: Obtain this from your [TZSMM PAY Dashboard](https://tzsmmpay.com/).
 4. Save changes, and you’re ready to accept payments!
 
----
+
 
 ## 🛠️ Usage
 
