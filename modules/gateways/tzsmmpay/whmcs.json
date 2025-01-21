@@ -1,0 +1,33 @@
+{
+ "schema": "1.0",
+ "type": "whmcs-gateways",
+ "name": "tzsmmpay",
+ "license": "MIT",
+ "category": "payments",
+ "description": {
+  "name": "TZSMM PAY Gateway",
+  "tagline": "Simplify Your Payment Management",
+  "long": "TZSMM PAY offers a seamless and secure payment gateway for WHMCS, enabling businesses to manage transactions efficiently.",
+  "features": [
+   "Quick and easy integration",
+   "Secure payment processing",
+   "Customizable checkout experience",
+   "Support for WHMCS 8+"
+  ]
+ },
+ "logo": {
+  "filename": "logo.png"
+ },
+ "support": {
+  "homepage": "https://tzsmmpay.com/",
+  "docs_url": "https://tzsmmpay.com/docs/",
+  "support_email": "support@tzsmmpay.com",
+  "issues_url": "https://tzsmmpay.com/support/"
+ },
+ "authors": [
+  {
+   "name": "TZSMM PAY Development Team",
+   "homepage": "https://tzsmmpay.com/"
+  }
+ ]
+}
