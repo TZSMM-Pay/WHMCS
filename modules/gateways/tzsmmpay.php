@@ -62,6 +62,7 @@ function tzsmmpay_createPayment($params)
     $apikey = $params['apiKey'];
     $invoiceId = $params['invoiceid'];
     $amount = $params['amount'];
+    $currency = $params['currency']; 
 
     // Get WHMCS system URL
     $systemUrl = WHMCS\Config\Setting::getValue('SystemURL');
@@ -77,6 +78,7 @@ function tzsmmpay_createPayment($params)
         "cus_country" => $invoiceId,
         "cus_city" => $customer['city'],
         "amount" => $amount,
+        "currency" => $currency,
         "success_url" => $successUrl,
         "callback_url" => $callbackUrl,
         "cancel_url" => $cancelUrl,
