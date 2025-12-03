@@ -13,7 +13,7 @@ function tzsmmpay_config()
         ],
         'Description' => [
             'Type' => 'System',
-            'Value' => 'This is the TZSMM PAY payment gateway module for WHMCS, which allows users to process payments securely.',
+            'Value' => 'This is the TZSMM PAY payment gateway module for WHMCS.',
         ],
         'DeveloperName' => [
             'Type' => 'System',
@@ -21,8 +21,18 @@ function tzsmmpay_config()
         ],
         'Version' => [
             'Type' => 'System',
-            'Value' => '1.0.0', // Update the version as needed
+            'Value' => '1.0.0',
         ],
+
+        // ✅ NEW: Hostname input (default: https://tzsmmpay.com)
+        'hostName' => [
+            'FriendlyName' => 'Gateway Hostname',
+            'Type' => 'text',
+            'Size' => '60',
+            'Value' => 'https://tzsmmpay.com',
+            'Description' => 'Enter your payment hostname, default: https://tzsmmpay.com'
+        ],
+
         'apiKey' => [
             'FriendlyName' => 'API Key',
             'Type' => 'text',
@@ -38,7 +48,7 @@ function tzsmmpay_link($params)
     $errorMsg = tzsmmpay_errormessage();
     $sessionMessage = $_SESSION["tzsmmpay_pending_invoice_id_{$invoiceId}"];
 
-    if (isset($sessionMessage) && !empty($sessionMessage)) {
+    if (!empty($sessionMessage)) {
         return '<div class="alert alert-danger" style="margin-top: 10px;" role="alert">' . $sessionMessage . '</div>';
     }
 
@@ -60,11 +70,11 @@ function tzsmmpay_createPayment($params)
 {
     $customer = $params['clientdetails'];
     $apikey = $params['apiKey'];
+    $hostname = rtrim($params['hostName'], "/"); // ✅ dynamic hostname
     $invoiceId = $params['invoiceid'];
     $amount = $params['amount'];
-    $currency = $params['currency']; 
+    $currency = $params['currency'];
 
-    // Get WHMCS system URL
     $systemUrl = WHMCS\Config\Setting::getValue('SystemURL');
     $callbackUrl = $systemUrl . '/modules/gateways/callback/tzsmmpay.php';
     $successUrl = $systemUrl . '/viewinvoice.php?id=' . $invoiceId;
@@ -84,9 +94,10 @@ function tzsmmpay_createPayment($params)
         "cancel_url" => $cancelUrl,
     ];
 
-    $url = 'https://tzsmmpay.com/api/payment/create';
-    $curl = curl_init();
+    // ✅ dynamic hostname used here
+    $url = $hostname . '/api/payment/create';
 
+    $curl = curl_init();
     curl_setopt_array($curl, [
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
@@ -111,7 +122,7 @@ function tzsmmpay_createPayment($params)
     $response = json_decode($response, true);
 
     if (isset($response['trx_id'])) {
-        $paymentUrl = 'https://tzsmmpay.com/api/payment/' . $response['trx_id'];
+        $paymentUrl = $hostname . '/api/payment/' . $response['trx_id'];
         return (object) [
             'status' => true,
             'payment_url' => $paymentUrl,
@@ -119,11 +130,10 @@ function tzsmmpay_createPayment($params)
     } else {
         return (object) [
             'status' => false,
-            'message' => isset($response['message']) ? $response['message'] : 'An error occurred.',
+            'message' => $response['message'] ?? 'An error occurred.',
         ];
     }
 }
-
 
 function tzsmmpay_errormessage()
 {
@@ -131,18 +141,17 @@ function tzsmmpay_errormessage()
         'cancelled' => 'Payment has been cancelled',
         'irs' => 'Invalid response from TZSMM API.',
         'tau' => 'The transaction has already been used.',
-        'lpa' => 'You\'ve paid less than the required amount.',
-        'pfv' => 'Your payment is pending verification.',
+        'lpa' => 'You paid less than required.',
+        'pfv' => 'Payment pending verification.',
         'sww' => 'Something went wrong'
     ];
 
-    $code = isset($_REQUEST['error']) ? $_REQUEST['error'] : null;
-    if (empty($code)) {
-        return null;
-    }
+    $code = $_REQUEST['error'] ?? null;
+    if (!$code) return null;
 
-    $error = isset($errorMessage[$code]) ? $errorMessage[$code] : $code;
+    $error = $errorMessage[$code] ?? $code;
 
     return '<div class="alert alert-danger" style="margin-top: 10px;" role="alert">' . $error . '</div>';
 }
+
 ?>
