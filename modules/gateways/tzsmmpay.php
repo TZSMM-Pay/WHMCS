@@ -72,8 +72,24 @@ function tzsmmpay_createPayment($params)
     $apikey = $params['apiKey'];
     $hostname = rtrim($params['hostName'], "/"); // ✅ dynamic hostname
     $invoiceId = $params['invoiceid'];
-    $amount = $params['amount'];
-    $currency = $params['currency'];
+    $amount = (float) $params['amount'];
+    $currencyCode = $params['currency']; // e.g., 'USD', 'BDT', etc.
+
+    // ✅ Convert to USD if the invoice is not in USD
+    if ($currencyCode !== 'USD') {
+        $results = Capsule::table('tblcurrencies')->where('code', 'USD')->first();
+        if ($results) {
+            $usdCurrencyId = $results->id;
+            // use WHMCS internal function to convert price
+            $amount = convertCurrency($amount, $params['currencyId'], $usdCurrencyId);
+            $currency = 'USD';
+        } else {
+            // If USD is not found in WHMCS currencies, keep original but log it
+            $currency = $currencyCode;
+        }
+    } else {
+        $currency = 'USD';
+    }
 
     $systemUrl = WHMCS\Config\Setting::getValue('SystemURL');
     $callbackUrl = $systemUrl . '/modules/gateways/callback/tzsmmpay.php';
@@ -83,16 +99,17 @@ function tzsmmpay_createPayment($params)
     $data = [
         "api_key" => $apikey,
         "cus_name" => $customer['firstname'] . " " . $customer['lastname'],
-        "cus_number" => $customer['phonenumber'] ?? 000,
+        "cus_number" => $customer['phonenumber'] ?? '000',
         "cus_email" => $customer['email'],
         "cus_country" => $invoiceId,
         "cus_city" => $customer['city'],
-        "amount" => $amount,
+        "amount" => number_format($amount, 2, '.', ''),
         "currency" => $currency,
         "success_url" => $successUrl,
         "callback_url" => $callbackUrl,
         "cancel_url" => $cancelUrl,
     ];
+
 
     // ✅ dynamic hostname used here
     $url = $hostname . '/api/payment/create';
